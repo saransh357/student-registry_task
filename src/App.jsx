@@ -131,7 +131,7 @@ export default function App() {
       // Reset the checkmark after 3 seconds
       setTimeout(() => setPublished(false), 3000);
     } catch (err) {
-      showToast("Failed to publish — check your backend URL", "error");
+      const msg = err.message?.includes("not configured") ? "Supabase not configured — add keys to .env" : (err.message || "Publish failed"); showToast(msg, "error");
     } finally {
       setPublishing(false);
     }
