@@ -29,7 +29,66 @@
   text-transform: uppercase;
   color: #5b21b6;
   font-family: "DM Mono", monospace;
+}
+
+/* ── Badge row ── */
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
   margin-bottom: 12px;
+}
+
+/* ── DB status badge ── */
+.dbBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: "DM Mono", monospace;
+  border: 1px solid transparent;
+}
+
+.dbConnected {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.dbDisconnected {
+  background: #fff5f5;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.dbLocal {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.dbDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.dbConnected .dbDot {
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 .title {
@@ -172,8 +231,130 @@
 .addBtn:hover  { background: #4338ca; }
 .addBtn:active { transform: scale(0.97); }
 
+/* ── Publish Button ── */
+.publishBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  background: #fff;
+  border: 1.5px solid #d97706;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #b45309;
+  cursor: pointer;
+  transition: background 0.13s, border-color 0.13s, color 0.13s, transform 0.1s;
+  font-family: "DM Sans", sans-serif;
+  white-space: nowrap;
+}
+.publishBtn:hover:not(:disabled) {
+  background: #fffbeb;
+  border-color: #b45309;
+  color: #92400e;
+}
+.publishBtn:active:not(:disabled) { transform: scale(0.97); }
+.publishBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Published success state */
+.publishedBtn {
+  background: #f0fdf4 !important;
+  border-color: #22c55e !important;
+  color: #15803d !important;
+}
+
+/* Spinner inside publish button */
+.publishSpinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(180, 83, 9, 0.25);
+  border-top-color: #b45309;
+  border-radius: 50%;
+  animation: spinPublish 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spinPublish {
+  to { transform: rotate(360deg); }
+}
+
 /* ── Animations ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════
+   MOBILE RESPONSIVE  (≤ 640px)
+   ════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 16px 48px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  /* Stack search + buttons vertically */
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .searchWrap {
+    min-width: unset;
+    width: 100%;
+  }
+
+  /* Buttons fill full width on mobile */
+  .btnGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .exportBtn,
+  .publishBtn,
+  .addBtn {
+    justify-content: center;
+    width: 100%;
+    font-size: 13px;
+    padding: 12px 10px;
+  }
+
+  /* Add Student spans full width */
+  .addBtn {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ════════════════════════════════════════
+   TABLET  (641px – 900px)
+   ════════════════════════════════════════ */
+@media (min-width: 641px) and (max-width: 900px) {
+  .page {
+    padding: 28px 20px 48px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .btnGroup {
+    flex-wrap: wrap;
+  }
 }
