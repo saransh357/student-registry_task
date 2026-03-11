@@ -83,7 +83,7 @@ export default function StudentForm({ mode, initialData, onSave, onClose }) {
             id="name"
             type="text"
             value={form.name}
-            placeholder="e.g. Jane Smith"
+            placeholder="e.g. Raj"
             error={errors.name}
             onChange={(v) => handleChange("name", v)}
           />
@@ -92,7 +92,7 @@ export default function StudentForm({ mode, initialData, onSave, onClose }) {
             id="email"
             type="email"
             value={form.email}
-            placeholder="e.g. jane@university.edu"
+            placeholder="e.g. guptaraj@university.edu"
             error={errors.email}
             onChange={(v) => handleChange("email", v)}
           />
