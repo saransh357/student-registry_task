@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import initialStudents       from "./data/students";
-import { exportToExcel }     from "./utils/exportExcel";
-import { publishToBackend }  from "./utils/publishToBackend";
+import initialStudents                    from "./data/students";
+import { exportToExcel }                  from "./utils/exportExcel";
+import { fetchFromDB, publishToBackend }  from "./utils/publishToBackend";
+import { isSupabaseConfigured }           from "./utils/supabase";
 
 import StudentTable  from "./components/StudentTable";
 import StudentForm   from "./components/StudentForm";
@@ -14,20 +15,48 @@ import styles from "./styles/App.module.css";
 
 export default function App() {
   /* ── State ── */
-  const [students,     setStudents]     = useState(initialStudents);
+  const [students,     setStudents]     = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [search,       setSearch]       = useState("");
   const [formModal,    setFormModal]    = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toast,        setToast]        = useState(null);
-  const [publishing,   setPublishing]   = useState(false);  // publish loading state
-  const [published,    setPublished]    = useState(false);  // success checkmark state
-  const nextId = useRef(initialStudents.length + 1);
+  const [publishing,   setPublishing]   = useState(false);
+  const [published,    setPublished]    = useState(false);
+  const [dbConnected,  setDbConnected]  = useState(false);
+  const nextId = useRef(1);
 
-  /* ── Simulate initial load ── */
+  /* ── Load: try DB first, fall back to seed data ── */
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(t);
+    async function loadStudents() {
+      if (isSupabaseConfigured) {
+        try {
+          const rows = await fetchFromDB();
+          if (rows && rows.length > 0) {
+            setStudents(rows);
+            nextId.current = Math.max(...rows.map((r) => r.id)) + 1;
+            setDbConnected(true);
+          } else {
+            // DB is empty — seed it with initial data
+            setStudents(initialStudents);
+            nextId.current = initialStudents.length + 1;
+            setDbConnected(true);
+          }
+        } catch {
+          // DB unreachable — fall back to seed data
+          setStudents(initialStudents);
+          nextId.current = initialStudents.length + 1;
+        }
+      } else {
+        // No Supabase config — use in-memory seed data
+        await new Promise((r) => setTimeout(r, 1200)); // simulated load
+        setStudents(initialStudents);
+        nextId.current = initialStudents.length + 1;
+      }
+      setLoading(false);
+    }
+
+    loadStudents();
   }, []);
 
   /* ── Toast helper ── */
@@ -148,10 +177,27 @@ export default function App() {
         {/* Header */}
         <header className={styles.header}>
           <div className={styles.headerText}>
-            <div className={styles.badge}>Registry v1.0</div>
+            <div className={styles.badgeRow}>
+              <div className={styles.badge}>Registry v1.0</div>
+              {isSupabaseConfigured && (
+                <div className={`${styles.dbBadge} ${dbConnected ? styles.dbConnected : styles.dbDisconnected}`}>
+                  <span className={styles.dbDot} />
+                  {dbConnected ? "Supabase Connected" : "DB Unreachable"}
+                </div>
+              )}
+              {!isSupabaseConfigured && (
+                <div className={styles.dbBadge + " " + styles.dbLocal}>
+                  <span className={styles.dbDot} />
+                  In-Memory Only
+                </div>
+              )}
+            </div>
             <h1 className={styles.title}>Student Registry</h1>
             <p className={styles.subtitle}>
-              Manage student records with full CRUD operations — all data stored in memory.
+              Manage student records with full CRUD operations.{" "}
+              {dbConnected
+                ? "Data is loaded from and published to your Supabase database."
+                : "Add your Supabase credentials to enable cloud sync."}
             </p>
           </div>
         </header>
