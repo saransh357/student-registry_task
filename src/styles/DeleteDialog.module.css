@@ -114,3 +114,31 @@
 }
 .confirmBtn:hover  { background: #b91c1c; }
 .confirmBtn:active { transform: scale(0.97); }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .dialog {
+    border-radius: 20px 20px 0 0;
+    max-width: 100%;
+    padding: 28px 20px 32px;
+    animation: slideUpMobile 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+  }
+
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .actions { flex-direction: column; }
+
+  .cancelBtn, .confirmBtn {
+    flex: unset;
+    width: 100%;
+    padding: 14px;
+  }
+}
