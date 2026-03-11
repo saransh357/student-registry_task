@@ -1,51 +1,41 @@
 -- ============================================================
 --  Student Registry · Supabase Schema
---  Run this in your Supabase project:
---  Dashboard → SQL Editor → New Query → paste & run
+--  Run this in: Dashboard → SQL Editor → New Query
 -- ============================================================
 
 -- 1. Create the students table
-create table if not exists public.students (
-  id          bigint        generated always as identity primary key,
-  name        text          not null,
-  email       text          not null unique,
-  age         integer       not null check (age >= 1 and age <= 120),
-  created_at  timestamptz   not null default now()
+CREATE TABLE IF NOT EXISTS public.students (
+  id         BIGINT       GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name       TEXT         NOT NULL,
+  email      TEXT         NOT NULL UNIQUE,
+  age        INTEGER      NOT NULL CHECK (age >= 1 AND age <= 120),
+  created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
 -- 2. Enable Row Level Security
-alter table public.students enable row level security;
+ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
 
--- 3. Allow anonymous reads (for public display)
-create policy "Allow public read"
-  on public.students
-  for select
-  using (true);
+-- 3. RLS Policies
+CREATE POLICY "Allow public read"
+  ON public.students FOR SELECT USING (true);
 
--- 4. Allow anonymous insert/update/delete
---    (for a production app, use auth tokens instead)
-create policy "Allow public insert"
-  on public.students
-  for insert
-  with check (true);
+CREATE POLICY "Allow public insert"
+  ON public.students FOR INSERT WITH CHECK (true);
 
-create policy "Allow public update"
-  on public.students
-  for update
-  using (true);
+CREATE POLICY "Allow public update"
+  ON public.students FOR UPDATE USING (true);
 
-create policy "Allow public delete"
-  on public.students
-  for delete
-  using (true);
+CREATE POLICY "Allow public delete"
+  ON public.students FOR DELETE USING (true);
 
--- 5. Add a helpful index on email
-create index if not exists students_email_idx on public.students (email);
+-- 4. Index on email
+CREATE INDEX IF NOT EXISTS students_email_idx ON public.students (email);
 
--- 6. Optional: seed some demo data
-insert into public.students (name, email, age) values
-  ('raj ',   'raj@university.edu',  21),
-  ('sara ', 'msara@university.edu',      23),
-  ('Priya Sharma',    'priya.s@university.edu',         20),
-  
-on conflict (email) do nothing;
+-- 5. Seed demo data
+INSERT INTO public.students (name, email, age)
+VALUES
+  ('Marcus ', 'm.williams@university.edu',    23),
+  ('Priya Sharma',    'priya.s@university.edu',       20),
+  ('riya d',     'd.riya@university.edu',       24),
+  (' pj ',   'lpj@university.edu',   19)
+ON CONFLICT (email) DO NOTHING;
