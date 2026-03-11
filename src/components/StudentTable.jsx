@@ -1,16 +1,6 @@
 import styles from "../styles/StudentTable.module.css";
 
-/**
- * @param {{
- *   students: Array,
- *   loading: boolean,
- *   search: string,
- *   onEdit: (student: object) => void,
- *   onDelete: (student: object) => void
- * }} props
- */
 export default function StudentTable({ students, loading, search, onEdit, onDelete }) {
-  // Generate a consistent hue from a name string
   const hue = (name) => (name.charCodeAt(0) * 23 + name.charCodeAt(1) * 7) % 360;
 
   const initials = (name) =>
@@ -69,11 +59,13 @@ export default function StudentTable({ students, loading, search, onEdit, onDele
                 className={styles.row}
                 style={{ animationDelay: `${i * 0.04}s` }}
               >
+                {/* Index */}
                 <td className={`${styles.td} ${styles.index}`}>
                   {String(i + 1).padStart(2, "0")}
                 </td>
 
-                <td className={styles.td}>
+                {/* Student name + avatar */}
+                <td className={`${styles.td} ${styles.studentCell}`}>
                   <div className={styles.student}>
                     <div
                       className={styles.avatar}
@@ -89,12 +81,17 @@ export default function StudentTable({ students, loading, search, onEdit, onDele
                   </div>
                 </td>
 
-                <td className={`${styles.td} ${styles.email}`}>{student.email}</td>
+                {/* Email */}
+                <td className={styles.td} data-label="Email">
+                  <span className={styles.email}>{student.email}</span>
+                </td>
 
-                <td className={styles.td}>
+                {/* Age */}
+                <td className={styles.td} data-label="Age">
                   <span className={styles.ageBadge}>{student.age}</span>
                 </td>
 
+                {/* Actions */}
                 <td className={`${styles.td} ${styles.actions}`}>
                   <button
                     className={styles.editBtn}
