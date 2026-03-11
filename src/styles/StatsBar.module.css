@@ -37,3 +37,29 @@
   letter-spacing: 0.09em;
   color: #94a3b8;
 }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .bar {
+    gap: 8px;
+  }
+
+  .card {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+  }
+
+  .value {
+    font-size: 20px;
+  }
+
+  .label {
+    font-size: 9px;
+  }
+}
