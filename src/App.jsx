@@ -196,8 +196,8 @@ export default function App() {
             <p className={styles.subtitle}>
               Manage student records with full CRUD operations.{" "}
               {dbConnected
-                ? "Data is loaded from and published to your Supabase database."
-                : "Add your Supabase credentials to enable cloud sync."}
+                ? "I'm using Supabase to handle my data. The API key is kept private, and I’ve added an extra layer of security by requiring a password to publish or remove any records ."
+                : "Add your Supabase credentials ."}
             </p>
           </div>
         </header>
